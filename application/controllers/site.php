@@ -8,6 +8,9 @@ $this->frames();
 
 }
 
+/*-----------------------------------------
+View Employees in Database (Employees)
+-------------------------------------*/
 public function viewit() {
 
 $this->load->model('get_db');
@@ -35,15 +38,16 @@ SEARCH
 public function search() {
 
 $this->load->model("get_db");
-
-$data['title'] = "Array Values";
 $data['results'] = $this->get_db->getAll();
-$this->load->view("view_db", $data);
+$this->load->view("view_search", $data);
 
 }
 
 /*-----------------------------------------
 LOGIN PAGE
+
+Username: hello@welcome.com
+Password: password
 -------------------------------------*/
 public function login() {
 
@@ -71,6 +75,10 @@ return false;
 }
 
 }
+
+/*-----------------------------------------
+LOGIN FORM VALIDATION
+-------------------------------------*/
 
 public function login_validation() {
 
@@ -108,7 +116,7 @@ redirect('index.php/site/login');
 }
 
 /*-----------------------------------------
-RESTRICTED VIEW
+RESTRICTED VIEW (If user has not logged in)
 -------------------------------------*/
 public function restricted() {
 
@@ -129,7 +137,7 @@ $this->load->view("site_nav");
 $this->load->view("content_home");
 $this->load->view("site_footer");
 
-	}
+}
 else {
 
 redirect('index.php/site/restricted');
@@ -138,30 +146,28 @@ redirect('index.php/site/restricted');
 }
 
 /*-----------------------------------------
-EMPLOYEE DETAILS PAGE
+EMPLOYEE DETAILS PAGE - Available for all users
 -------------------------------------*/
 
 public function employee_details() {
 
-if ($this->session->userdata('is_logged_in')) { 
-
-$data["message"] = "";
 
 $this->load->view("site_header");
 $this->load->view("site_nav");
-$this->load->view("content_employee_details", $data);
 $this->load->view("site_footer");
 
+$this->load->model("get_db");
+
+$data['results'] = $this->get_db->getAll();
+$this->load->view("employee_view_all", $data);
+$this->load->view("site_header");
+$this->load->view("site_nav");
+$this->load->view("site_footer");
+
+
 }
 
-else {
 
-redirect('index.php/site/restricted');
-
-}
-
-
-}
 
 /*-----------------------------------------
 ADD EMPLOYEE
@@ -184,6 +190,9 @@ redirect('index.php/site/restricted');
 
 }
 
+/*-----------------------------------------
+ADD EMPLOYEE FORM VALIDATION
+-------------------------------------*/
 public function validation_add() {
 
 $this->load->library('form_validation');
@@ -223,6 +232,9 @@ $str = $this->db->insert_string('employees', $newRow);
 $this->db->insert('employees', $newRow);
 $this->db->insert('titles', $newRow2);
 
+/*-----------------------------------------
+If Employee is not a manager, record is added to employee table. If they are, record is added to manager table.
+-------------------------------------*/
 if ($manager = 'Y') {
 
 $this->db->insert('dept_manager', $newRow3);
@@ -232,9 +244,9 @@ $this->db->insert('dept_manager', $newRow3);
 $this->db->insert('dept_emp', $newRow3);
 
 /*		'jobtitle'=> $this->input->post('jtitle'), 
-	'gender'=> $this->input->post('gender'),
-	'department'=> $this->input->post('dept'),
-	));
+'gender'=> $this->input->post('gender'),
+'department'=> $this->input->post('dept'),
+));
 
 
 $this->get_db->insert2($newRow2); */
@@ -272,14 +284,16 @@ redirect('index.php/site/restricted');
 }
 
 }
+/*-----------------------------------------
+UPDATE FORM VALIDATION
+-------------------------------------*/
 
 public function validation_update() {
 
 $this->load->library('form_validation');
-$this->form_validation->set_rules("fname", "First Name", "required|trim|");
+$this->form_validation->set_rules("fname", "First Name", "required|trim");
 $this->form_validation->set_rules("lname", "Last Name", "required|trim");
-$this->form_validation->set_rules("jtitle", "Job Title", "required|trim|");
-$this->form_validation->set_rules("dept", "Department", "required|trim");
+$this->form_validation->set_rules("emp_no", "Employee Number", "required|numeric|trim|is_unique|exact_length[6]");
 
 if ($this->form_validation->run() == FALSE) {
 
@@ -293,12 +307,10 @@ $this->load->view("site_footer");
 $this->load->model("get_db");
 
 $newRow = array(array(
-	"first_name"=> $this->input->post('fname'), 
-	'last_name'=> $this->input->post('lname'),
-	'jobtitle'=> $this->input->post('jtitle'), 
-	'gender'=> $this->input->post('gender'),
-	'department'=> $this->input->post('dept'),
-	));
+"first_name"=> $this->input->post('fname'), 
+'last_name'=> $this->input->post('lname'),
+'emp_no'=> $this->input->post('emp_no'), 
+));
 
 $this->get_db->update2($newRow);
 
@@ -320,9 +332,6 @@ public function deleteEmployee() {
 
 if ($this->session->userdata('is_logged_in')) {
 
-$this->load->model('get_db');
-$data['query'] = $this->get_db->employee_getall();
-
 $this->load->model('get_db');		
 $this->load->view('site_header');
 $this->load->view('site_nav');
@@ -338,6 +347,9 @@ redirect('index.php/site/restricted');
 }
 
 }
+/*-----------------------------------------
+DELETE FORM VALIDATION
+-------------------------------------*/
 
 public function validation_delete() {
 
@@ -383,7 +395,9 @@ echo "Deleted!"; */
 
 }
 
-
+/*-----------------------------------------
+Checks to see if ID is in the database before attempting to delete.
+-------------------------------------*/
 public function validate_credentials() {
 
 $this->load->model('employee_delete');

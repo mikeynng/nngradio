@@ -9,7 +9,7 @@
 <div id="content">
 	<h1>Delete Employee</h1>
 	
-	<?php
+	<?php /*
 	
 	foreach($query as $row) { 
 	
@@ -20,7 +20,7 @@
 	echo "<br>";
 	
 	
-	} 
+	} */
 	
 	echo form_open('index.php/site/validation_delete');
 	echo validation_errors();

@@ -3,29 +3,31 @@
 
 class Get_db extends CI_Model {
 
-		function getAll() {
+	function getAll() {
 
-		$firstname = $this->db->query("SELECT * FROM employees");
-		/*$lastname = $this->db->query("SELECT last_name FROM employees");
-		$jobtitle = $this->db->query("SELECT title FROM titles");
-		$dept = $this->db->query("SELECT dept_name FROM departments");
-		$deptid = $this->db->query("SELECT dept_no FROM departments"); */
-		
-		return $firstname->result();
-	/*	return $lastname->result();
-		return $jobtitle->result();
-		return $dept->result();
-		return $deptid->result(); */
-
+$query = $this->db->query("SELECT * FROM employees");
+$query1 = $this->db->query("SELECT * FROM titles");
+$query2 = $this->db->query("SELECT * FROM departments");
+	
+	return $query->result();
+	return $query1->result();
+	return $query2->result();
 }
 
-		public function employee_getall() {
+	public function employee_getall() {
+	
+		$query = $this->db->get('employees');
+		return $query->result();
 		
-			$query = $this->db->get('employees');
-			return $query->result();
-			
-		
-		}
-		}
+	
+	}
+	
+	function update2($data) {
+	
+		$this->db->update_batch("employees", $data, "emp_no");
+	
+	}
+	
+	}
 
 

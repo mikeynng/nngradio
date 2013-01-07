@@ -10,7 +10,7 @@ public function can_delete() {
 	// Gets the infor from the table users
 	$query = $this->db->get('employees');
 	
-	if ($query->num_rows() == 1) {
+	if ($query->num_rows() > 0) {
 	
 	
 	return true; }

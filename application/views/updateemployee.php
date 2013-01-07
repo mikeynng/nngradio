@@ -15,27 +15,10 @@
 	echo form_input('lname');
 	echo "<p>";
 	
-	echo "<p>Job Title: ";
-	echo form_input('jtitle');
+	echo "<p>Employee Number: ";
+	echo form_input('emp_no');
 	echo "<p>";
-	
-	echo "<p>Gender: Male ";
-	echo form_radio('gender', 'accept', TRUE);
-	echo "Female ";
-	echo form_radio('gender', 'accept');
-	echo "<p>";
-	
-	$department = array(
-                   'd1'  => 'Sales',
-                   'd2'    => 'Engineering',
-                   'd3'   => 'Design',
-                   'd4' => 'HR',
-				   'd5' => 'Widget Manufacturing',
-                 );
-	echo "<p>Department: ";			 
-	echo form_dropdown('dept', $department, 'd1');
-	
-	
+
 	echo "<p>";
 	echo form_submit('login_submit', 'Update Employee');
 
